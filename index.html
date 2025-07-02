@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Spotify lỏ by Tiến</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      background: #1DB954;
+      width: 100%;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .player {
+      margin-top: 50px;
+      background-color: #282828;
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    .cover {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .song-title {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .lyrics {
+      margin-top: 10px;
+      font-style: italic;
+      font-size: 15px;
+      min-height: 24px;
+    }
+
+    .controls {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    button {
+      background: #1DB954;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    button:hover {
+      background: #1ed760;
+    }
+
+    svg {
+      fill: white;
+    }
+  </style>
+</head>
+<body>
+
+  <header>Spotify XD 🎧</header>
+
+  <div class="player">
+    <img src="dunglamtraitimanhdau.jpg" class="cover" id="cover" alt="cover">
+    <div class="song-title" id="title">Tên bài hát</div>
+    <audio id="audio"></audio>
+
+    <div class="lyrics">
+      <span id="lyric">♪ ...</span>
+    </div>
+
+    <div class="controls">
+      <button onclick="togglePlay()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 256 256">
+          <path d="M184,64V192a8,8,0,0,1-16,0V64a8,8,0,0,1,16,0Zm40-8a8,8,0,0,0-8,8V192a8,8,0,0,0,16,0V64A8,8,0,0,0,224,56Zm-80,72a15.76,15.76,0,0,1-7.33,13.34L48.48,197.49A15.91,15.91,0,0,1,24,184.15V71.85A15.91,15.91,0,0,1,48.48,58.51l88.19,56.15A15.76,15.76,0,0,1,144,128Zm-16.18,0L40,72.08V183.93Z"/>
+        </svg>
+        Phát / Dừng
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const audio = document.getElementById('audio');
+    const title = document.getElementById('title');
+    const lyricText = document.getElementById('lyric');
+
+    const song = {
+      title: 'Đừng làm trái tim anh đau',
+      src: 'https://raw.githubusercontent.com/TienVN7/music/main/dunglamtraitimanhdau.mp3',
+      cover: 'dunglamtraitimanhdau.jpg'
+    };
+
+    const lyrics = [
+  { time: 0.0, text: `Hình như trong lòng anh đã không còn hình bóng ai ngoài em đâu` },
+  { time: 3.92, text: `Hằng đêm anh nằm thao thức suy tư, chẳng nhớ ai ngoài em đâu` },
+  { time: 7.85, text: `Vậy nên không cần nói nữa, yêu mà đòi nói trong vài ba câu` },
+  { time: 11.77, text: `Cứ cố quá đâm ra lại hâm` },
+  { time: 15.7, text: `Uhm, đau hết cả đầu` },
+  { time: 19.62, text: `` },
+  { time: 23.54, text: `Đợi chờ em trước nhà từ sáng đến trưa chiều tối mắc màn đây luôn (Ah-ah-ah-ah)` },
+  { time: 27.47, text: `Ngược nắng hay là ngược gió, miễn anh thấy em tươi vui không buồn` },
+  { time: 31.39, text: `Chỉ cần có thấy thế thôi mây xanh chan hoà` },
+  { time: 35.32, text: `(Uhm) thấy thế thôi vui hơn có quà` },
+  { time: 39.24, text: `Và bước kế tiếp anh lại gần hơn chút đó nha` },
+  { time: 43.17, text: `` },
+  { time: 47.09, text: `Rồi ngày ấy cuối cùng đã tìm đến, ta nào đâu hay (Hay)` },
+  { time: 51.01, text: `Anh sẽ không để vụt mất đi cơ duyên ông trời trao tay` },
+  { time: 54.94, text: `Còn đắn đo băn khoăn gì nữa, tiếp cận em ngay (Ngay)` },
+  { time: 58.86, text: `Cố gắng sao không để em nghi ngờ dù một giây lúc này` },
+  { time: 62.79, text: `` },
+  { time: 66.71, text: `Được đứng bên em anh hạnh phúc, tim loạn nhịp tung bay (Bay)` },
+  { time: 70.63, text: `Chắc chắn anh thề anh sẽ không bao giờ quên ngày hôm nay` },
+  { time: 74.56, text: `Chính em, chính em, tương tư mình em thôi` },
+  { time: 78.48, text: `Mãi theo sau mình em thôi, mãi si mê mình em thôi` },
+  { time: 82.41, text: `(Mãi yêu thương mình em)` },
+  { time: 86.33, text: `` },
+  { time: 90.25, text: `Vậy thì anh xin chết vì người anh thương` },
+  { time: 94.18, text: `Có biết bao nhiêu điều còn đang vấn vương` },
+  { time: 98.1, text: `Dành cho em, dành hết ân tình anh mang một đời` },
+  { time: 102.03, text: `Đừng làm trái tim anh đau` },
+  { time: 105.95, text: `` },
+  { time: 109.87, text: `Vậy thì anh xin chết vì người anh thương` },
+  { time: 113.8, text: `Nên có biết bao nhiêu điều còn đang vấn vương` },
+  { time: 117.72, text: `Dành cho em, dành hết ân tình anh mang một đời` },
+  { time: 121.65, text: `Đừng làm trái tim anh đau` },
+  { time: 125.57, text: `` },
+  { time: 129.5, text: `Tình cờ lọt vào, nụ cười ngọt ngào (Ngào)` },
+  { time: 133.42, text: `Anh thề không biết đường thoát ra làm sao` },
+  { time: 137.34, text: `Lựa một lời chào phải thật là ngầu nào (Nào)` },
+  { time: 141.27, text: `Nay tự dưng sao toàn mấy câu tào lao` },
+  { time: 145.19, text: `Lại gần một chút cho anh ngắm nhìn người vài phút, say trong cơn mơ thiên đàng` },
+  { time: 149.12, text: `Quên đi chuyện của nhân gian, hoà vào trăng sao, tan theo miên man` },
+  { time: 153.04, text: `` },
+  { time: 156.96, text: `Nhiều lời rồi đấy nhé, dài dòng rồi đấy nhé` },
+  { time: 160.89, text: `Rồi cứ thế, vòng lặp lại cứ thế` },
+  { time: 164.81, text: `Lại bối rối, không xong là đến tối` },
+  { time: 168.74, text: `Nói luôn đi, "Đời này chỉ cần mình em thôi"` },
+  { time: 172.66, text: `Giấu hết nhớ nhung sâu trong lời nhạc, nối tiếp những áng thơ ngô nghê rời rạc` },
+  { time: 176.58, text: `Viết lên chuyện đôi ta vào một ngày không xa, ngày về chung một nhà` },
+  { time: 180.51, text: `` },
+  { time: 184.43, text: `Rồi ngày ấy cuối cùng đã tìm đến, ta nào đâu hay (Hay)` },
+  { time: 188.36, text: `Anh sẽ không để vụt mất đi cơ duyên ông trời trao tay` },
+  { time: 192.28, text: `Còn đắn đo băn khoăn gì nữa, tiếp cận em ngay (Ngay)` },
+  { time: 196.2, text: `Cố gắng sao không để em nghi ngờ dù một giây lúc này` },
+  { time: 200.13, text: `` },
+  { time: 204.05, text: `Được đứng bên em anh hạnh phúc, tim loạn nhịp tung bay (Bay)` },
+  { time: 207.98, text: `Chắc chắn anh thề anh sẽ không bao giờ quên ngày hôm nay` },
+  { time: 211.9, text: `Chính em, chính em, tương tư mình em thôi` },
+  { time: 215.83, text: `Mãi theo sau mình em thôi, mãi si mê mình em thôi` },
+  { time: 219.75, text: `(Mãi yêu thương mình em)` },
+  { time: 223.67, text: `` },
+  { time: 227.6, text: `Vậy thì anh xin chết vì người anh thương` },
+  { time: 231.52, text: `Có biết bao nhiêu điều còn đang vấn vương` },
+  { time: 235.45, text: `Dành cho em, dành hết ân tình anh mang một đời` },
+  { time: 239.37, text: `Đừng làm trái tim anh đau` },
+  { time: 243.29, text: `` },
+  { time: 247.22, text: `Vậy thì anh xin chết vì người anh thương` },
+  { time: 251.14, text: `Nên có biết bao nhiêu điều còn đang vấn vương` },
+  { time: 255.07, text: `Dành cho em, dành hết ân tình anh mang một đời` },
+  { time: 258.99, text: `Đừng làm trái tim anh đau` },
+  { time: 262.91, text: `` },
+  { time: 266.84, text: `Vậy thì anh xin chết vì người anh thương` },
+  { time: 270.76, text: `Có biết bao nhiêu điều còn đang vấn vương` },
+  { time: 274.69, text: `Dành cho em, dành hết ân tình anh mang một đời` },
+  { time: 278.61, text: `Đừng làm trái tim anh đau` },
+  { time: 282.53, text: `` },
+  { time: 286.46, text: `Vậy thì anh xin chết vì người anh thương` },
+  { time: 290.38, text: `Có biết bao nhiêu điều còn đang vấn vương` },
+  { time: 294.31, text: `Dành cho em, dành hết ân tình anh mang một đời` },
+  { time: 298.23, text: `Đừng làm trái tim anh đau (Ooh, hey)` },
+  { time: 302.16, text: `` },
+  { time: 306.08, text: `La-la-la-la (hey), la-la-la-la-la-la-la` },
+  { time: 310.0, text: `La-la-la-la (hey), la-la-la-la-la-la-la` },
+  { time: 313.93, text: `La-la-la-la (okay), la-la-la-la-la-la-la` },
+  { time: 317.85, text: `(Đừng làm trái tim anh đau)` },
+  { time: 321.78, text: `One more time, one more time, one more time` },
+];
+
+
+    // Gán dữ liệu
+    title.innerText = song.title;
+    audio.src = song.src;
+    document.getElementById('cover').src = song.cover;
+
+    function togglePlay() {
+      if (audio.paused) {
+        audio.play();
+      } else {
+        audio.pause();
+      }
+    }
+
+    // Chạy lời theo thời gian nhạc
+    audio.ontimeupdate = () => {
+      for (let i = lyrics.length - 1; i >= 0; i--) {
+        if (audio.currentTime >= lyrics[i].time) {
+          lyricText.innerText = lyrics[i].text;
+          break;
+        }
+      }
+    };
+  </script>
+
+</body>
+</html>
